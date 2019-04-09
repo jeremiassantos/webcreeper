@@ -1,0 +1,58 @@
+# Maven
+#log/
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+
+lib/
+dist/
+
+
+
+# Eclipse
+.classpath
+.project
+.settings/
+.externalToolBuilders/
+eclipse-launch-profiles/
+
+# Grunt integration
+npm-debug.log
+node/
+node_modules/
+bower_components/
+src/main/webapp/main-min/
+
+# Negocio
+blobstore/
+datastore/
+#src/main/webapp/WEB-INF/appengine-web.xml
+#*appengine-web.xml
+
+# Sonar
+.sonar
+
+
+# Created by https://www.gitignore.io/api/intellij+iml
+
+### Intellij+iml ###
+
+*.iws
+/out/
+.idea_modules/
+atlassian-ide-plugin.xml
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+*.iml
+modules.xml
+*.ipr
+.idea/
+
+.vscode/
