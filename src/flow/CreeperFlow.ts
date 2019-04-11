@@ -7,15 +7,15 @@ export class CreeperFlow {
     private state: Map<string, any> = new Map()
 
     constructor() {
-        console.log("\n"+
-        " _____                               \n"+
-        "/  __ \\                              \n"+
-        "| /  \\/_ __ ___  ___ _ __   ___ _ __ \n"+
-        "| |   | '__/ _ \\/ _ \\ '_ \\ / _ \\ '__|\n"+
-        "| \\__/\\ | |  __/  __/ |_) |  __/ |   \n"+
-        " \\____/_|  \\___|\\___| .__/ \\___|_|   \n"+
-        "                    | |              \n"+
-        "                    |_|              \n")
+        console.log("\n" +
+            " _____                               \n" +
+            "/  __ \\                              \n" +
+            "| /  \\/_ __ ___  ___ _ __   ___ _ __ \n" +
+            "| |   | '__/ _ \\/ _ \\ '_ \\ / _ \\ '__|\n" +
+            "| \\__/\\ | |  __/  __/ |_) |  __/ |   \n" +
+            " \\____/_|  \\___|\\___| .__/ \\___|_|   \n" +
+            "                    | |              \n" +
+            "                    |_|              \n")
     }
 
     step(name: string, execute: FlowExecute) {
@@ -24,7 +24,7 @@ export class CreeperFlow {
 
     async executeAll() {
 
-        for(let key of this.executions.keys()) {
+        for (let key of this.executions.keys()) {
 
             const execute: FlowExecute = this.executions.get(key);
 
@@ -35,14 +35,14 @@ export class CreeperFlow {
             console.log(creeper.toString())
 
             creeper.destroy()
-         }
+        }
     }
 
-    put(key: string, value: any) {
-        this.state.set(key, value);
-    }
+    contex(key: string, value?: any): any {
+        if (value) {
+            this.state.set(key, value);
+        }
 
-    get(key: string): any {
         return this.state.get(key);
     }
 }

@@ -11,13 +11,13 @@ export class Creeper {
 
     private pageUrl;
 
-    async goto(pageUrl: string) {
+    async goto(pageUrl: string, options?: CreeperOptions) {
 
         this.pageUrl = pageUrl;
 
         this.creeperState = new CreeperState()
 
-        this.currentDom = await CreeperCall.getPage(pageUrl)
+        this.currentDom = await CreeperCall.getPage(pageUrl, options)
     }    
 
     toHtml(): string {
@@ -72,4 +72,13 @@ export class Creeper {
         return value ? replaceall(`\n`, "", replaceall(`\t`, "", value.trim())) : value;
     }
     
+}
+
+export interface CreeperOptions {
+
+    httpMethod?: string;
+
+    params?: Map<string, string>;
+
+    queryParams?: Map<string, string>;
 }

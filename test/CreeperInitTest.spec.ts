@@ -75,7 +75,7 @@ describe('Init creeper test', () => {
 
         const length = creeper.toHtml().length
 
-        flow.put('length', length.toString())
+        flow.contex('length', length.toString())
 
         return creeper;
       }
@@ -89,9 +89,9 @@ describe('Init creeper test', () => {
 
         await creeper.goto('https://github.com/');
 
-        const text = creeper.getText('body > div.application-main > main > div.py-6.py-sm-8.jumbotron-codelines > div > div > div.col-md-7.text-center.text-md-left > h1')
+        const text = creeper.getText('body > div.application-main > main > div.py-6.py-sm-8.jumbotron-codelines > div > div > div.col-md-7.text-center.text-md-left > p > a:nth-child(1)')
 
-        flow.put('centerText', text)
+        flow.contex('centerText', text)
 
         return creeper;
       }
@@ -99,10 +99,37 @@ describe('Init creeper test', () => {
     
     await flow.executeAll()
 
-    console.log(`Length ${flow.get('length')} && Center text: ${flow.get('centerText')}`)
+    expect(flow.contex('centerText')).to.equals('open source');
+    expect(Number(flow.contex('length'))).to.greaterThan(8000);
+  });
 
+  it('Add step in flow and input options of request', async () => {
 
-    //expect(length).to.greaterThan(8000);
+    const flow: CreeperFlow = new CreeperFlow()
+
+    flow.step('Search user in github', {
+
+      execute: async () => {
+
+        const creeper: Creeper = new Creeper()
+
+        const queryParams: Map<string, string> = new Map()
+
+        queryParams.set('q', 'jeremias')
+
+        await creeper.goto('https://github.com/search',{ queryParams: queryParams });
+
+        const results = creeper.getText('#js-pjax-container > div > div.col-12.col-md-9.float-left.px-2.pt-3.pt-md-0.codesearch-results > div > div.d-flex.flex-column.flex-md-row.flex-justify-between.border-bottom.pb-3.position-relative > h3')
+
+        flow.contex('results', results)
+
+        return creeper;
+      }
+    })
+
+    await flow.executeAll()
+
+    expect(flow.contex('results')).to.equals('52 repository results');
   });
 
 });
