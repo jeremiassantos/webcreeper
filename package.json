@@ -6,7 +6,7 @@
   "scripts": {
     "build": "./node_modules/.bin/tslint --project tsconfig.json && ./node_modules/.bin/tsc",
     "deploy": "npm run test && npm publish --access public",
-    "test": "mocha -r ts-node/register test/**/*.spec.ts"
+    "test": "mocha --timeout 15000 -r ts-node/register test/**/*.spec.ts"
   },
   "repository": {
     "type": "git",
@@ -26,6 +26,7 @@
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.6",
+    "@types/cheerio": "^0.22.8",
     "chai": "^4.2.0",
     "mocha": "^6.1.2",
     "ts-node": "^8.0.3",
@@ -34,6 +35,9 @@
   },
   "dependencies": {
     "request": "2.83.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "cheerio": "^1.0.0-rc.2",
+    "iconv-lite": "^0.4.24",
+    "replaceall": "^0.1.6"
   }
 }
