@@ -1,7 +1,9 @@
-import { Creeper } from "../src/core/Creeper"
-import { CreeperFlow } from "../src/flow/CreeperFlow"
+import { Creeper, CreeperFlow } from "../src/index"
 import { expect } from 'chai';
 import 'mocha';
+import fs from "fs"
+import path from "path"
+import { CreeperCall } from "../src/handle/CreeperCall";
 
 describe('Init creeper test', () => {
 
@@ -18,7 +20,6 @@ describe('Init creeper test', () => {
 
     expect(length).to.greaterThan(8000);
   });
-
 
   it('Get text by selector', async () => {
 
@@ -96,7 +97,7 @@ describe('Init creeper test', () => {
         return creeper;
       }
     })
-    
+
     await flow.executeAll()
 
     expect(flow.contex('centerText')).to.equals('open source');
@@ -117,7 +118,7 @@ describe('Init creeper test', () => {
 
         queryParams.set('q', 'jeremias')
 
-        await creeper.goto('https://github.com/search',{ queryParams: queryParams });
+        await creeper.goto('https://github.com/search', { queryParams: queryParams });
 
         const results = creeper.getText('#js-pjax-container > div > div.col-12.col-md-9.float-left.px-2.pt-3.pt-md-0.codesearch-results > div > div.d-flex.flex-column.flex-md-row.flex-justify-between.border-bottom.pb-3.position-relative > h3')
 
@@ -132,4 +133,157 @@ describe('Init creeper test', () => {
     expect(flow.contex('results')).to.equals('52 repository results');
   });
 
+  it('Add domain for config session', async () => {
+
+    const flow: CreeperFlow = new CreeperFlow()
+
+    flow.setGlobalSessionConfig('github.com')
+
+    flow.step('Search user in github', {
+
+      execute: async () => {
+
+        const creeper: Creeper = new Creeper()
+
+        await creeper.goto('https://github.com/');
+
+        const length = creeper.toHtml().length
+
+        flow.contex('length', length.toString())
+
+        return creeper;
+      }
+    })
+
+    await flow.executeAll()
+
+    const sessionInfo = JSON.parse(JSON.stringify(CreeperCall.getCreeperState().getCookie()))
+
+    expect(sessionInfo._jar.cookies.length).to.equals(8);
+  });
+
+  it('Parse table', async () => {
+
+    const creeper: Creeper = new Creeper()
+
+    creeper.setHtmlManual(getContentHtml('table.html'))
+
+    const positions = [
+      { key: 1, value: 'company' },
+      { key: 2, value: 'contact' },
+      { key: 3, value: 'country' }
+    ]
+
+    const companys = creeper.parseTable({ selector: '#customers', skipHeader: true, positions: positions })
+
+    expect(companys.length).to.equals(6);
+    expect(companys[0].company).to.equals('Alfreds Futterkiste');
+    expect(companys[0].contact).to.equals('Maria Anders');
+    expect(companys[0].country).to.equals('Germany');
+  });
+
+  it('Parse table', async () => {
+
+    const creeper: Creeper = new Creeper()
+
+    creeper.setHtmlManual(getContentHtml('table.html'))
+
+    const positions = [
+      { key: 1, value: 'company' },
+      { key: 2, value: 'contact' },
+      { key: 3, value: 'country' }
+    ]
+
+    const companys = creeper.parseTable({ selector: '#customers', skipHeader: true, positions: positions })
+
+    expect(companys.length).to.equals(6);
+    expect(companys[0].company).to.equals('Alfreds Futterkiste');
+    expect(companys[0].contact).to.equals('Maria Anders');
+    expect(companys[0].country).to.equals('Germany');
+  });
+
+  it('Parse table to string', async () => {
+
+    const creeper: Creeper = new Creeper()
+
+    creeper.setHtmlManual(getContentHtml('table.html'))
+
+    const parser = creeper.parseTableToString({ selector: '#customers', skipHeader: true})
+
+    expect(parser.length).to.greaterThan(6);
+    
+  });
+
+  it('Parse table with custom extract', async () => {
+
+    const creeper: Creeper = new Creeper()
+
+    creeper.setHtmlManual(getContentHtml('table.html'))
+
+    const positions = [
+      { key: 1, value: 'company' },
+      { key: 2, value: 'contact' },
+      { key: 3, value: 'country' }
+    ]
+
+    const customExtract = {
+      extract: (clild, item) => {
+        const id = clild.find('form input[type="hidden"]:nth-child(2)').attr('value');
+        item.id = id
+      }
+    }
+
+    const companys = creeper.parseTable({ selector: '#customers', skipHeader: true, positions: positions, extract: customExtract })
+
+    expect(companys.length).to.equals(6);
+    expect(companys[0].company).to.equals('Alfreds Futterkiste');
+    expect(companys[0].contact).to.equals('Maria Anders');
+    expect(companys[0].country).to.equals('Germany');
+    expect(companys[0].id).to.equals('sdsdsds55555');
+  });
+
+  it('Get Values of Select', async () => {
+
+    const creeper: Creeper = new Creeper()
+
+    creeper.setHtmlManual(
+    "<select class=\"list_items\">\n"+
+    "  <option value=\"\">Select option</option>" +
+    "  <option value=\"1\">Blue</option>\n"+
+    "  <option value=\"2\">Origin</option>\n"+
+    "  <option value=\"3\">Red</option>\n"+
+    "  <option value=\"4\">Green</option>\n"+
+    "</select>")
+
+    const values = creeper.getValuesSelect('.list_items')
+
+    expect(values.length).to.equals(5);
+    expect(values[0].id).to.equals('');
+    expect(values[0].value).to.equals('Select option');
+    expect(values[4].id).to.equals('4');
+    expect(values[4].value).to.equals('Green');
+  });
+
+  it('Get Values of Select and skip value empty', async () => {
+
+    const creeper: Creeper = new Creeper()
+
+    creeper.setHtmlManual(
+    "<select class=\"list_items\">\n"+
+    "  <option value=\"\">Select option</option>" +
+    "  <option value=\"1\">Blue</option>\n"+
+    "  <option value=\"2\">Origin</option>\n"+
+    "  <option value=\"3\">Red</option>\n"+
+    "  <option value=\"4\">Green</option>\n"+
+    "</select>")
+
+    const values = creeper.getValuesSelect('.list_items', true)
+
+    expect(values.length).to.equals(4);
+  });
+
 });
+
+function getContentHtml(filename) {
+  return fs.readFileSync(path.join(__dirname, './' + filename), 'utf8');
+}

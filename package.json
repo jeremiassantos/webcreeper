@@ -1,11 +1,12 @@
 {
   "name": "webcreeper",
-  "version": "0.0.2",
+  "version": "0.0.32",
   "description": "WebCreeper easy web crawler",
   "main": "dist/index.js",
+  "types": "src/index.ts",
   "scripts": {
-    "build": "./node_modules/.bin/tslint --project tsconfig.json && ./node_modules/.bin/tsc",
-    "deploy": "npm run test && npm publish --access public",
+    "build": "tsc",
+    "deploy": "npm test && npm run build && npm publish --access public",
     "test": "mocha --timeout 15000 -r ts-node/register test/**/*.spec.ts"
   },
   "repository": {
@@ -25,8 +26,9 @@
   "homepage": "https://github.com/jeremiassantos/webcreeper#readme",
   "devDependencies": {
     "@types/chai": "^4.1.7",
-    "@types/mocha": "^5.2.6",
     "@types/cheerio": "^0.22.8",
+    "@types/mocha": "^5.2.6",
+    "@types/request": "^2.48.1",
     "chai": "^4.2.0",
     "mocha": "^6.1.2",
     "ts-node": "^8.0.3",
@@ -38,6 +40,7 @@
     "request-promise": "^4.2.2",
     "cheerio": "^1.0.0-rc.2",
     "iconv-lite": "^0.4.24",
-    "replaceall": "^0.1.6"
+    "replaceall": "^0.1.6",
+    "request-cookies": "^1.1.0"
   }
 }
