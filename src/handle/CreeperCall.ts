@@ -127,7 +127,7 @@ export class CreeperCall {
         return form;
     }
 
-    static buildCookiesHeader() {
+    static buildCookiesHeader(additional?: Map<string, string>) {
 
         const cookiesList = JSON.parse(JSON.stringify(CreeperCall.getCreeperState().getCookie()))['_jar'].cookies
 
@@ -136,6 +136,12 @@ export class CreeperCall {
         for (var i = 0; i < cookiesList.length; i++) {
             const { key, value } = cookiesList[i]
             builder += `${key}=${value};`
+        }
+
+        if(additional) {
+            additional.forEach((v, k) => {
+                builder += `${k}=${v};`
+            })
         }
 
         return builder

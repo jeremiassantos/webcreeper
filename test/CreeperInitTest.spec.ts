@@ -159,7 +159,7 @@ describe('Init creeper test', () => {
 
     const sessionInfo = JSON.parse(JSON.stringify(CreeperCall.getCreeperState().getCookie()))
 
-    expect(sessionInfo._jar.cookies.length).to.equals(8);
+    expect(sessionInfo._jar.cookies.length).to.equals(6);
   });
 
   it('Parse table', async () => {
@@ -280,6 +280,24 @@ describe('Init creeper test', () => {
     const values = creeper.getValuesSelect('.list_items', true)
 
     expect(values.length).to.equals(4);
+  });
+
+  it('Parse ul to list', async () => {
+
+    const creeper: Creeper = new Creeper()
+
+    creeper.setHtmlManual(
+      "<ul class=\"TabbedPanelsTabGroup\" style=\"font-size:10px;\">" +
+        "<li class=\"TabbedPanelsTab titulo_abas_internas\">Regra Geral</li>" +
+        "<li class=\"TabbedPanelsTab titulo_abas_internas\">Suspensão</li>" +
+        "<li class=\"TabbedPanelsTab titulo_abas_internas\">ZFM</li>" +
+        "<li class=\"TabbedPanelsTab titulo_abas_internas\">Exportação</li>" +
+        "<li class=\"TabbedPanelsTab titulo_abas_internas\">Importação</li>\n"+
+      "</ul>")
+
+    const values = creeper.parseUlToList(".TabbedPanelsTabGroup")
+
+    expect(values.length).to.equals(5);
   });
 
 });

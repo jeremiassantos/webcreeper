@@ -166,6 +166,22 @@ export class Creeper {
         return builder;
     }
 
+    parseUlToList(selectorUl): Array<string> {
+
+        const list = [];
+
+        var rows = this.currentDom(selectorUl).find('li');
+
+        for(var i = 0; i < rows.length; i++) {
+
+            const value = this.currentDom(rows[i]).text().split("\n")
+
+            list.push(value[0])
+        }
+
+        return list;
+    }
+
     parseTable(options: TableOptions): Array<any> {
         
         const tableList = [];
@@ -316,8 +332,8 @@ export class CreeperFlow {
         return JSON.stringify(JSON.parse(JSON.stringify(CreeperCall.getCreeperState().getCookie()))['_jar'].cookies);
     }
 
-    getCookiesString(): string {
-        return CreeperCall.buildCookiesHeader();
+    getCookiesString(additional?: Map<string, string>): string {
+        return CreeperCall.buildCookiesHeader(additional);
     }
 
 }
