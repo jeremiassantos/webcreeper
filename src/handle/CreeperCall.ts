@@ -45,13 +45,15 @@ export class CreeperCall {
                 if (this.json(options)) {
                     resolve({
                         dom: '',
-                        body: body
+                        body: body,
+                        response: res
                     })
                 } else {
 
                     resolve({
                         dom: DomParse.parse(body, options),
-                        body: body
+                        body: body,
+                        response: res
                     })
                 }
 

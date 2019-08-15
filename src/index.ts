@@ -4,6 +4,7 @@ import replaceall from "replaceall"
 import fs from "fs"
 import { GlobalSessionConfig } from "./core/GlobalSessionConfig";
 import { DomParse } from "./core/DomParse";
+import { Response } from "request";
 
 export class Creeper {
 
@@ -17,7 +18,7 @@ export class Creeper {
 
     constructor() {}
 
-    async goto(pageUrl: string, options?: CreeperOptions) {
+    async goto(pageUrl: string, options?: CreeperOptions): Promise<Response> {
 
         this.pageUrl = pageUrl;
 
@@ -31,10 +32,12 @@ export class Creeper {
             }
         }
 
-        const { dom, body } = await CreeperCall.getPage(pageUrl, options)
+        const { dom, body, response } = await CreeperCall.getPage(pageUrl, options)
 
         this.currentDom = dom;
         this.currentBody = body;
+
+        return response
     }    
 
     body(): any {
