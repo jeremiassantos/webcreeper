@@ -245,6 +245,9 @@ export interface CreeperOptions {
     setCookieHeader?: boolean;
 
     printFileWhenError?: boolean;
+
+    throwInReponseBiger200?: boolean
+    
 }
 
 export class Session {
