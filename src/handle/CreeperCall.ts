@@ -33,7 +33,13 @@ export class CreeperCall {
                     if (options && options.printFileWhenError) {
                         await this.createFileError(res.body)
                     }
-                    throw new Error(`Error in the request: status ${res.statusCode}`)
+                    
+                    const errorMensage = `Error in the request: status ${res.statusCode} | ${res.statusMessage}`
+
+                    if(options && (!options.throwInReponseBiger200 || options.throwInReponseBiger200 === true)) {
+                        throw new Error(errorMensage)
+                    } else {
+                        console.error(errorMensage)                    }
                 }
 
                 if (options && options.sessions) {
