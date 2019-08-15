@@ -33,13 +33,14 @@ export class CreeperCall {
                     if (options && options.printFileWhenError) {
                         await this.createFileError(res.body)
                     }
-                    
+
                     const errorMensage = `Error in the request: status ${res.statusCode} | ${res.statusMessage}`
 
-                    if(options && (!options.throwInReponseBiger200 || options.throwInReponseBiger200 === true)) {
-                        throw new Error(errorMensage)
+                    if (options && !options.throwInReponseBigger200) {
+                        console.error(errorMensage)
                     } else {
-                        console.error(errorMensage)                    }
+                        throw new Error(errorMensage)
+                    }
                 }
 
                 if (options && options.sessions) {
@@ -146,7 +147,7 @@ export class CreeperCall {
             builder += `${key}=${value};`
         }
 
-        if(additional) {
+        if (additional) {
             additional.forEach((v, k) => {
                 builder += `${k}=${v};`
             })

@@ -246,7 +246,7 @@ export interface CreeperOptions {
 
     printFileWhenError?: boolean;
 
-    throwInReponseBiger200?: boolean
+    throwInReponseBigger200?: boolean
     
 }
 
