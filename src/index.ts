@@ -68,6 +68,26 @@ export class Creeper {
         return this.getValueBySelector(selector);
     }
 
+    getTextAndLink(selector: string): string {
+
+        let text = this.getText(selector);
+
+        var rows = this.currentDom(selector).find('a');
+
+        for(var i = 0; i < rows.length; i++) {
+
+            const href = this.currentDom(rows[i]).attr('href')
+
+            const value = this.normalizeSpace(this.currentDom(rows[i]).text())
+
+            if(href && value) {
+                text = `${text} * Ref.: ${value} (${href}) *`
+            }
+        }
+
+        return text
+    }
+
     getNumber(selector: string): number {
         return this.convertNumber(this.getValueBySelector(selector))
     }

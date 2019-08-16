@@ -342,6 +342,27 @@ describe('Init creeper test', () => {
     expect(values.length).to.equals(8);
   });
 
+  it('Get text and links', async () => {
+
+    const creeper: Creeper = new Creeper()
+
+    creeper.setHtmlManual(
+    "<td rowspan=\"3\" class=\"TabbedPanelsTabGroup\">\n"+
+    "  <p><a href=\"http://www.econeteditora.com.br/bdi/lei/ant/lei9249_1995.asp#art3\" target=\"blank\">Artigo 3Âº</a> e <a\n"+
+    "      href=\"http://www.econeteditora.com.br/bdi/lei/ant/lei9249_1995.asp#art15_p1_iii_a\" target=\"blank\">alÃ\u00ADnea \"a\"</a>\n"+
+    "    do <a href=\"http://www.econeteditora.com.br/bdi/lei/ant/lei9249_1995.asp#art15_p1_iii\" target=\"blank\">inciso III</a>\n"+
+    "    do <a href=\"http://www.econeteditora.com.br/bdi/lei/ant/lei9249_1995.asp#art15_p1\" target=\"blank\">Â§ 1Âº</a> do <a\n"+
+    "      href=\"http://www.econeteditora.com.br/bdi/lei/ant/lei9249_1995.asp#art15\" target=\"blank\">artigo 15</a> da <a\n"+
+    "      href=\"http://www.econeteditora.com.br/bdi/lei/ant/lei9249_1995.asp\" target=\"blank\">Lei nÂº 9.249/95</a>; <a\n"+
+    "      href=\"http://www.econeteditora.com.br/bdi/lei/ant/lei9250_1995.asp#art40\" target=\"blank\">artigo 40</a> da <a\n"+
+    "      href=\"http://www.econeteditora.com.br/bdi/lei/ant/lei9250_1995.asp\" target=\"blank\">Lei nÂº 9.250/95</a>.</p>\n"+
+    "</td>")
+
+    const values = creeper.getTextAndLink('body > p')
+
+    expect(values.length).to.equals(852);
+  });
+
 });
 
 function getContentHtml(filename) {
