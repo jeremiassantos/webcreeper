@@ -185,6 +185,42 @@ export class Creeper {
         return list;
     }
 
+    getAttributesByChildren(selectorRoot: string, attributeTarget: string): Array<string> {
+
+        const list: Array<string> = []
+
+        var rows = this.currentDom(selectorRoot).children();
+
+        for(var i = 0; i < rows.length; i++) {
+
+            const value = this.currentDom(rows[i]).attr(attributeTarget)
+
+            if(value) {
+                list.push(value)
+            }
+        }
+
+        return list;
+    }
+
+    getValuesByChildren(selectorRoot: string): Array<string> {
+
+        const list: Array<string> = []
+
+        var rows = this.currentDom(selectorRoot).children();
+
+        for(var i = 0; i < rows.length; i++) {
+
+            const value = this.normalizeSpace(this.currentDom(rows[i]).text())
+
+            if(value) {
+                list.push(value)
+            }
+        }
+
+        return list;
+    }
+
     parseTable(options: TableOptions): Array<any> {
         
         const tableList = [];
