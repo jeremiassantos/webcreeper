@@ -95,7 +95,11 @@ export class Creeper {
     }
 
     async awaitSeconds(seconds: number) {
-        this.awaitMilliseconds(seconds * 1000)
+        await this.awaitMilliseconds(seconds * 1000)
+    }
+
+    async awaitMinutes(minutes: number) {
+        await this.awaitSeconds(minutes * 60)
     }
 
     getNumber(selector: string): number {
