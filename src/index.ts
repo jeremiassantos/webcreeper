@@ -88,6 +88,16 @@ export class Creeper {
         return text
     }
 
+    async awaitMilliseconds(milli: number) {
+        const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
+
+        await sleep(milli);
+    }
+
+    async awaitSeconds(seconds: number) {
+        this.awaitMilliseconds(seconds * 1000)
+    }
+
     getNumber(selector: string): number {
         return this.convertNumber(this.getValueBySelector(selector))
     }
