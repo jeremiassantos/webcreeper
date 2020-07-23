@@ -2,7 +2,7 @@ import { CreeperOptions } from "../index";
 import { CreeperState } from "../core/CreeperState";
 import request from "request";
 import { DomParse } from "../core/DomParse";
-import fs from "fs"
+import * as fs from "fs"
 
 export class CreeperCall {
 

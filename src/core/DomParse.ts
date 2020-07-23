@@ -1,10 +1,10 @@
-import iconv from "iconv-lite"
+import * as iconv from "iconv-lite"
 import cheerio from "cheerio"
 import { CreeperOptions } from "../index";
 
 export class DomParse {
 
-    static parse(body: string,  options?: CreeperOptions): CheerioStatic {
+    static parse(body: string,  options?: CreeperOptions): any {
 
         const $ = cheerio.load(iconv.decode(Buffer.from(body), this.encoding(options)))
 

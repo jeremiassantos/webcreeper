@@ -130,7 +130,7 @@ describe('Init creeper test', () => {
 
     await flow.executeAll()
 
-    expect(flow.contex('results')).to.equals('54 repository results');
+    expect(flow.contex('results')).to.equals('96 repository results');
   });
 
   it('Add domain for config session', async () => {
@@ -159,7 +159,7 @@ describe('Init creeper test', () => {
 
     const sessionInfo = JSON.parse(JSON.stringify(CreeperCall.getCreeperState().getCookie()))
 
-    expect(sessionInfo._jar.cookies.length).to.equals(8);
+    expect(sessionInfo._jar.cookies.length).to.equals(6);
   });
 
   it('Parse table', async () => {

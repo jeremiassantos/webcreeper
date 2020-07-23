@@ -1,14 +1,14 @@
 
 import { CreeperCall } from "./handle/CreeperCall";
 import replaceall from "replaceall"
-import fs from "fs"
+import * as fs from "fs"
 import { GlobalSessionConfig } from "./core/GlobalSessionConfig";
 import { DomParse } from "./core/DomParse";
 import { Response } from "request";
 
 export class Creeper {
 
-    private currentDom: CheerioStatic;
+    private currentDom: any;
 
     private currentBody: object;
 
