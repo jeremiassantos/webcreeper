@@ -24,7 +24,8 @@ export class CreeperCall {
                 json: this.json(options),
                 jar: this.state.getCookie(),
                 form: this.formData(options),
-                rejectUnauthorized: false
+                rejectUnauthorized: false,
+                timeout: options.timeout
             }, async (err, res, body) => {
 
                 console.log(` [ Response status code: ${res.statusCode} ]`)

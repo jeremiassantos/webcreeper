@@ -1,12 +1,12 @@
 {
   "name": "webcreeper",
-  "version": "0.0.44",
+  "version": "0.0.45",
   "description": "WebCreeper easy web crawler",
   "main": "dist/index.js",
   "types": "src/index.ts",
   "scripts": {
     "build": "tsc",
-    "deploy": "npm test && npm run build && npm publish --access public",
+    "deploy": "npm run build && npm publish --access public",
     "test": "mocha --timeout 15000 -r ts-node/register test/**/*.spec.ts"
   },
   "repository": {

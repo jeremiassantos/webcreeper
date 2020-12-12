@@ -317,6 +317,9 @@ export interface CreeperOptions {
     printFileWhenError?: boolean;
 
     throwInReponseBigger200?: boolean
+
+    // Ms
+    timeout?: number
     
 }
 

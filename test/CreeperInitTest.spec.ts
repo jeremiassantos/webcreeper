@@ -130,7 +130,7 @@ describe('Init creeper test', () => {
 
     await flow.executeAll()
 
-    expect(flow.contex('results')).to.equals('96 repository results');
+    expect(flow.contex('results')).to.equals('106 repository results');
   });
 
   it('Add domain for config session', async () => {
