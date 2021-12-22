@@ -1,24 +1,23 @@
 import { Creeper, CreeperFlow } from "../src/index"
-import { expect } from 'chai';
-import 'mocha';
 import fs from "fs"
 import path from "path"
 import { CreeperCall } from "../src/handle/CreeperCall";
-
+jest.setTimeout(50000)
 describe('Init creeper test', () => {
 
   it('Verify size of content html', async () => {
-
 
     const creeper: Creeper = new Creeper()
 
     await creeper.goto('https://github.com/');
 
+    await creeper.awaitSeconds(3)
+
     const length = creeper.toHtml().length;
 
     creeper.destroy()
 
-    expect(length).to.greaterThan(8000);
+    expect(length).toBeGreaterThan(8000);
   });
 
   it('Get text by selector', async () => {
@@ -27,11 +26,11 @@ describe('Init creeper test', () => {
 
     await creeper.goto('https://github.com/');
 
-    const text = creeper.getText('body > div.application-main > main > div.py-6.py-sm-8.jumbotron-codelines > div > div > div.col-md-7.text-center.text-md-left > h1')
+    const text = creeper.getText('body > div.application-main > main > div.overflow-hidden > div.home-hero-container.position-relative.js-webgl-globe-data > div.home-hero.position-absolute.z-1.top-0.right-0.bottom-0.left-0.overflow-hidden > div > div > div.ml-md-n3.mr-md-3.col-12.col-lg-6.text-center.text-md-left > h1')
 
     creeper.destroy()
 
-    expect(text).to.equals('Built for developers');
+    expect(text).toBe('Where the world builds software');
   });
 
   it('Verify element exists: true', async () => {
@@ -40,11 +39,11 @@ describe('Init creeper test', () => {
 
     await creeper.goto('https://github.com/');
 
-    const exists = creeper.exists('body > div.application-main > main > div.py-6.py-sm-8.jumbotron-codelines > div > div > div.col-md-7.text-center.text-md-left > h1')
+    const exists = creeper.exists('body > div.application-main > main > div.overflow-hidden > div.home-hero-container.position-relative.js-webgl-globe-data > div.home-hero.position-absolute.z-1.top-0.right-0.bottom-0.left-0.overflow-hidden > div > div > div.ml-md-n3.mr-md-3.col-12.col-lg-6.text-center.text-md-left > form > div > button')
 
     creeper.destroy()
 
-    expect(exists).to.true;
+    expect(exists).toBeTruthy();
   });
 
   it('Verify element exists: false', async () => {
@@ -57,7 +56,7 @@ describe('Init creeper test', () => {
 
     creeper.destroy()
 
-    expect(exists).to.false;
+    expect(exists).toBeFalsy();
   });
 
 
@@ -90,7 +89,7 @@ describe('Init creeper test', () => {
 
         await creeper.goto('https://github.com/');
 
-        const text = creeper.getText('body > div.application-main > main > div.py-6.py-sm-8.jumbotron-codelines > div > div > div.col-md-7.text-center.text-md-left > p > a:nth-child(1)')
+        const text = creeper.getText('body > div.application-main > main > div.overflow-hidden > div.home-hero-container.position-relative.js-webgl-globe-data > div.home-hero.position-absolute.z-1.top-0.right-0.bottom-0.left-0.overflow-hidden > div > div > div.ml-md-n3.mr-md-3.col-12.col-lg-6.text-center.text-md-left > div > div > div > div > div.col-sm-4.col-md-3.d-none.d-md-block > p')
 
         flow.contex('centerText', text)
 
@@ -100,8 +99,8 @@ describe('Init creeper test', () => {
 
     await flow.executeAll()
 
-    expect(flow.contex('centerText')).to.equals('open source');
-    expect(Number(flow.contex('length'))).to.greaterThan(8000);
+    expect(flow.contex('centerText')).toBe('Repositories');
+    expect(Number(flow.contex('length'))).toBeGreaterThan(8000);
   });
 
   it('Add step in flow and input options of request', async () => {
@@ -114,9 +113,9 @@ describe('Init creeper test', () => {
 
         const creeper: Creeper = new Creeper()
 
-        const queryParams: Map<string, string> = new Map()
-
-        queryParams.set('q', 'jeremias')
+        const queryParams = {
+          'q': 'jeremias'
+        }
 
         await creeper.goto('https://github.com/search', { queryParams: queryParams });
 
@@ -130,7 +129,7 @@ describe('Init creeper test', () => {
 
     await flow.executeAll()
 
-    expect(flow.contex('results')).to.equals('106 repository results');
+    expect(Number(flow.contex('results').replace(' repository results', ''))).toBeGreaterThan(106);
   });
 
   it('Add domain for config session', async () => {
@@ -159,7 +158,7 @@ describe('Init creeper test', () => {
 
     const sessionInfo = JSON.parse(JSON.stringify(CreeperCall.getCreeperState().getCookie()))
 
-    expect(sessionInfo._jar.cookies.length).to.equals(6);
+    expect(sessionInfo._jar.cookies.length).toBe(6);
   });
 
   it('Parse table', async () => {
@@ -176,10 +175,10 @@ describe('Init creeper test', () => {
 
     const companys = creeper.parseTable({ selector: '#customers', skipHeader: true, positions: positions })
 
-    expect(companys.length).to.equals(6);
-    expect(companys[0].company).to.equals('Alfreds Futterkiste');
-    expect(companys[0].contact).to.equals('Maria Anders');
-    expect(companys[0].country).to.equals('Germany');
+    expect(companys.length).toBe(6);
+    expect(companys[0].company).toBe('Alfreds Futterkiste');
+    expect(companys[0].contact).toBe('Maria Anders');
+    expect(companys[0].country).toBe('Germany');
   });
 
   it('Parse table', async () => {
@@ -196,10 +195,10 @@ describe('Init creeper test', () => {
 
     const companys = creeper.parseTable({ selector: '#customers', skipHeader: true, positions: positions })
 
-    expect(companys.length).to.equals(6);
-    expect(companys[0].company).to.equals('Alfreds Futterkiste');
-    expect(companys[0].contact).to.equals('Maria Anders');
-    expect(companys[0].country).to.equals('Germany');
+    expect(companys.length).toBe(6);
+    expect(companys[0].company).toBe('Alfreds Futterkiste');
+    expect(companys[0].contact).toBe('Maria Anders');
+    expect(companys[0].country).toBe('Germany');
   });
 
   it('Parse table to string', async () => {
@@ -210,7 +209,7 @@ describe('Init creeper test', () => {
 
     const parser = creeper.parseTableToString({ selector: '#customers', skipHeader: true})
 
-    expect(parser.length).to.greaterThan(6);
+    expect(parser.length).toBeGreaterThan(6);
     
   });
 
@@ -235,11 +234,11 @@ describe('Init creeper test', () => {
 
     const companys = creeper.parseTable({ selector: '#customers', skipHeader: true, positions: positions, extract: customExtract })
 
-    expect(companys.length).to.equals(6);
-    expect(companys[0].company).to.equals('Alfreds Futterkiste');
-    expect(companys[0].contact).to.equals('Maria Anders');
-    expect(companys[0].country).to.equals('Germany');
-    expect(companys[0].id).to.equals('sdsdsds55555');
+    expect(companys.length).toBe(6);
+    expect(companys[0].company).toBe('Alfreds Futterkiste');
+    expect(companys[0].contact).toBe('Maria Anders');
+    expect(companys[0].country).toBe('Germany');
+    expect(companys[0].id).toBe('sdsdsds55555');
   });
 
   it('Get Values of Select', async () => {
@@ -257,11 +256,11 @@ describe('Init creeper test', () => {
 
     const values = creeper.getValuesSelect('.list_items')
 
-    expect(values.length).to.equals(5);
-    expect(values[0].id).to.equals('');
-    expect(values[0].value).to.equals('Select option');
-    expect(values[4].id).to.equals('4');
-    expect(values[4].value).to.equals('Green');
+    expect(values.length).toBe(5);
+    expect(values[0].id).toBe('');
+    expect(values[0].value).toBe('Select option');
+    expect(values[4].id).toBe('4');
+    expect(values[4].value).toBe('Green');
   });
 
   it('Get Values of Select and skip value empty', async () => {
@@ -279,7 +278,7 @@ describe('Init creeper test', () => {
 
     const values = creeper.getValuesSelect('.list_items', true)
 
-    expect(values.length).to.equals(4);
+    expect(values.length).toBe(4);
   });
 
   it('Parse ul to list', async () => {
@@ -297,7 +296,7 @@ describe('Init creeper test', () => {
 
     const values = creeper.parseUlToList(".TabbedPanelsTabGroup")
 
-    expect(values.length).to.equals(5);
+    expect(values.length).toBe(5);
   });
 
   it('Get attributes children', async () => {
@@ -318,7 +317,7 @@ describe('Init creeper test', () => {
 
     const values = creeper.getAttributesByChildren('body > p', 'href')
 
-    expect(values.length).to.equals(8);
+    expect(values.length).toBe(8);
   });
 
   it('Get values children', async () => {
@@ -339,7 +338,7 @@ describe('Init creeper test', () => {
 
     const values = creeper.getValuesByChildren('body > p')
 
-    expect(values.length).to.equals(8);
+    expect(values.length).toBe(8);
   });
 
   it('Get text and links', async () => {
@@ -360,7 +359,7 @@ describe('Init creeper test', () => {
 
     const values = creeper.getTextAndLink('body > p')
 
-    expect(values.length).to.equals(852);
+    expect(values.length).toBe(852);
   });
 
 });

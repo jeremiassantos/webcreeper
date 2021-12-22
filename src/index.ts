@@ -8,6 +8,8 @@ import { Response } from "request";
 
 export class Creeper {
 
+    private readonly MESSAGE_INVALID_DOM = ' [ ERROR: Invalid DOM, possible errors -> [Page not initialize! use { goto }, Dom not assigned due to another error referring to the page] ] '
+
     private currentDom: any;
 
     private currentBody: object;
@@ -22,10 +24,11 @@ export class Creeper {
 
         this.pageUrl = pageUrl;
 
+        if(!options) {
+            options = {}
+        }
+
         if(GlobalSessionConfig.session) {
-            if(!options) {
-                options = {}
-            }
 
             if(!options.sessions) {
                 options.sessions = GlobalSessionConfig.session;
@@ -47,7 +50,7 @@ export class Creeper {
     toHtml(): string {
         
         if(!this.currentDom) {
-            throw new Error(" [ ERROR: Page not initialize! use { goto } ] ");
+            throw new Error(this.MESSAGE_INVALID_DOM);
         }
 
         return this.currentDom.html();
@@ -56,7 +59,7 @@ export class Creeper {
     getText(selector: string): string {
 
         if(!this.currentDom) {
-            throw new Error(" [ ERROR: Page not initialize! use { goto } ]");
+            throw new Error(this.MESSAGE_INVALID_DOM);
         }
 
         const exists: boolean = this.exists(selector);
@@ -108,7 +111,7 @@ export class Creeper {
 
     exists(selector: string): boolean {
         if(!this.currentDom) {
-            throw new Error(" [ ERROR: Page not initialize! use { goto } ] ");
+            throw new Error(this.MESSAGE_INVALID_DOM);
         }
 
         return this.currentDom(selector).length > 0;
@@ -298,11 +301,11 @@ export interface CreeperOptions {
 
     httpMethod?: string;
 
-    params?: Map<string, string>;
+    params?: { [key:string]: string };
 
-    queryParams?: Map<string, string>;
+    queryParams?: { [key:string]: string };
 
-    headers?: Map<string, string>;
+    headers?: { [key:string]: string };
 
     sessions?: Session;
 
@@ -310,7 +313,7 @@ export interface CreeperOptions {
 
     json?: object;
 
-    formData?: Map<string, string>;
+    formData?: { [key:string]: string };
     
     setCookieHeader?: boolean;
 

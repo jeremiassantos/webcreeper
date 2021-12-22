@@ -9,63 +9,67 @@ export class CreeperCall {
     private static state: CreeperState = new CreeperState();
 
     static async getPage(pageUrl: string, options?: CreeperOptions) {
-        return await this.execuete(pageUrl, options).catch((err) => new Error(err))
+        return await this.execute(pageUrl, options)
     }
 
-    private static async execuete(pageUrl: string, options?: CreeperOptions): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
+    private static async execute(pageUrl: string, options?: CreeperOptions): Promise<any> {
+        return new Promise<any>((resolve) => {
 
-            request({
-                method: this.method(options),
-                headers: this.headers(options),
-                url: pageUrl,
-                encoding: null,
-                qs: this.queryParams(options),
-                json: this.json(options),
-                jar: this.state.getCookie(),
-                form: this.formData(options),
-                rejectUnauthorized: false,
-                timeout: options.timeout
-            }, async (err, res, body) => {
-
-                console.log(` [ Response status code: ${res.statusCode} ]`)
-
-                if (err || res.statusCode > 399) {
-                    if (options && options.printFileWhenError) {
-                        await this.createFileError(res.body)
+            try {
+                request({
+                    method: this.method(options),
+                    headers: this.headers(options),
+                    url: pageUrl,
+                    encoding: null,
+                    qs: this.queryParams(options),
+                    json: this.json(options),
+                    jar: this.state.getCookie(),
+                    form: this.formData(options),
+                    rejectUnauthorized: false,
+                    timeout: options.timeout
+                }, async (err, res, body) => {
+    
+                    console.log(` [ Response status code: ${res.statusCode} ]`)
+    
+                    if (err || res.statusCode > 399) {
+                        if (options && options.printFileWhenError) {
+                            await this.createFileError(res.body)
+                        }
+    
+                        const errorMensage = `Error in the request: status ${res.statusCode} | ${res.statusMessage}`
+    
+                        if (options && !options.throwInReponseBigger200) {
+                            console.error(errorMensage)
+                        } else {
+                            throw new Error(errorMensage)
+                        }
                     }
-
-                    const errorMensage = `Error in the request: status ${res.statusCode} | ${res.statusMessage}`
-
-                    if (options && !options.throwInReponseBigger200) {
-                        console.error(errorMensage)
+    
+                    if (options && options.sessions) {
+                        this.state.setCookie(res, options.sessions)
                     } else {
-                        throw new Error(errorMensage)
+                        this.state.setCookie(res)
                     }
-                }
-
-                if (options && options.sessions) {
-                    this.state.setCookie(res, options.sessions)
-                } else {
-                    this.state.setCookie(res)
-                }
-
-                if (this.json(options)) {
-                    resolve({
-                        dom: '',
-                        body: body,
-                        response: res
-                    })
-                } else {
-
-                    resolve({
-                        dom: DomParse.parse(body, options),
-                        body: body,
-                        response: res
-                    })
-                }
-
-            })
+    
+                    if (this.json(options)) {
+                        resolve({
+                            dom: '',
+                            body: body,
+                            response: res
+                        })
+                    } else {
+    
+                        resolve({
+                            dom: DomParse.parse(body, options),
+                            body: body,
+                            response: res
+                        })
+                    }
+    
+                })
+            } catch(e) {
+                throw e
+            }
         })
     }
 
@@ -83,8 +87,8 @@ export class CreeperCall {
 
         const qs = {}
 
-        for (let key of options.queryParams.keys()) {
-            qs[key] = options.queryParams.get(key);
+        for (let key of Object.keys(options.queryParams)) {
+            qs[key] = options.queryParams[key];
         }
 
         return qs;
@@ -95,8 +99,8 @@ export class CreeperCall {
         const headers = {}
 
         if (options && options.headers) {
-            for (let key of options.headers.keys()) {
-                headers[key] = options.headers.get(key);
+            for (let key of Object.keys(options.headers)) {
+                headers[key] = options.headers[key];
             }
         }
 
@@ -130,8 +134,8 @@ export class CreeperCall {
 
         const form = {};
 
-        for (let key of options.formData.keys()) {
-            form[key] = options.formData.get(key);
+        for (let key of Object.keys(options.formData)) {
+            form[key] = options.formData[key];
         }
 
         return form;
