@@ -305,7 +305,7 @@ export class Creeper {
         return tableList;
     }
 
-    getCookies(): any {
+    getCookies(): { [key:string]: string } {
         return CreeperCall.getCookies()
     }
 }
