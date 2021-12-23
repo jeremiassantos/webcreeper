@@ -24,8 +24,26 @@ export class Creeper {
 
         this.pageUrl = pageUrl;
 
+        options = this.getDefaultParams(options)
+
+        const { dom, body, response } = await CreeperCall.getPage(pageUrl, options)
+
+        this.currentDom = dom;
+        this.currentBody = body;
+
+        return response
+    }
+    
+    private getDefaultParams(options?: CreeperOptions) {
+
         if(!options) {
             options = {}
+        }
+
+        const isNullOrUndefined = (value: any) => value == undefined || value == null
+
+        if(isNullOrUndefined(options.setCookieHeader)) {
+            options.setCookieHeader = true
         }
 
         if(GlobalSessionConfig.session) {
@@ -35,13 +53,8 @@ export class Creeper {
             }
         }
 
-        const { dom, body, response } = await CreeperCall.getPage(pageUrl, options)
-
-        this.currentDom = dom;
-        this.currentBody = body;
-
-        return response
-    }    
+        return options
+    }
 
     body(): any {
         return this.currentBody;
@@ -129,11 +142,12 @@ export class Creeper {
 
     getValuesSelect(selector: string, skipValueEmpty?: boolean): Array<any> {
         const list: Array<any> = new Array();
-        this.currentDom(selector).find('option').each((i,op) => {
+        this.currentDom(selector).find('option').each((i, op) => {
             const id = this.currentDom(op).attr('value');
             if(!(!id && skipValueEmpty)) {
                 list.push({
                     id: id,
+                    i,
                     value: this.currentDom(op).text()
                 })
             }
@@ -177,12 +191,7 @@ export class Creeper {
     
     async createFileWithHtml(name?: string): Promise<void> {
         const finalName = name ? name : `${new Date().getTime()}.html`
-        await fs.writeFile(finalName, this.currentDom.html(), function(err) {
-            if(err) {
-                return console.log(err);
-            }
-            console.log(` [ The ${finalName} file was saved! ]`);
-        })
+        fs.writeFileSync(finalName, this.currentDom.html())
     }
 
     setHtmlManual(html: string, encode?: string): void {
@@ -294,6 +303,10 @@ export class Creeper {
         }
 
         return tableList;
+    }
+
+    getCookies(): { [key:string]: string } {
+        return CreeperCall.getCookies()
     }
 }
 

@@ -161,6 +161,19 @@ export class CreeperCall {
         return builder
     }
 
+    static getCookies(): { [key:string]: string } {
+        const cookiesList = JSON.parse(JSON.stringify(CreeperCall.getCreeperState().getCookie()))['_jar'].cookies
+
+        let cookieObject: { [key:string]: string } = {};
+
+        for (var i = 0; i < cookiesList.length; i++) {
+            const { key, value } = cookiesList[i]
+            cookieObject[key] = value
+        }
+
+        return cookieObject
+    }
+
     static getCreeperState(): CreeperState {
         return this.state;
     }
