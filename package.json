@@ -1,6 +1,6 @@
 {
   "name": "webcreeper",
-  "version": "0.0.50",
+  "version": "0.0.51",
   "description": "WebCreeper easy web crawler",
   "main": "dist/index.js",
   "types": "src/index.ts",
